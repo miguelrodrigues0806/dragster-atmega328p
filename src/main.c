@@ -1,10 +1,63 @@
 #include <avr/io.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+void inic(void);
+int ler_ADC(void);
+
 
 int main(void) {
-    // Configuração inicial de hardware e interrupções
-    
-    while (1) {
-        // Ciclo de controlo de trajetória e velocidade
-    }
-    return 0;
+	inic();
+
+	while (1) {
+		// 2. Lê o ADC e atualiza o PWM de forma limpa e direta
+		OCR0A= ler_ADC();
+		
+		
+
+	}
+	return 0;
 }
+
+void inic(void){
+	//PORTD -> Motor
+	DDRD |= (1<<PORTD0)|(1<<PORTD1)|(1<<PORTD2)|(1<<PORTD3)|(1<<PORTD6);
+	PORTD &= ~((1<<PORTD0)|(1<<PORTD1)|(1<<PORTD2)|(1<<PORTD3));
+	
+	//PORTB -> Led
+	DDRB |= (1<<PORTB1);
+	PORTB &= ~(1<<PORTB1);
+	
+	//TIMER1 -> Modo CTC 1s 
+	//f_OC1A = f_clk/(2*N*(1+0CR1A))
+	//N=256 / f_clk = 16MHz / f_OC1A = 1Hz
+	//OCR1A = 31249 
+	OCR1A = 31249;
+	//Toggle
+	TCCR1A = (1<<COM1A0);
+	TCCR1B = (1<<CS12)|(1<<WGM12);
+
+	
+	//TIMER0 -> modo PWM
+	TCCR0A = (1<< COM0A1)|(1<<WGM01)|(1<<WGM00); //Configurar PWM prescaler 64 fpwm próximo de 500Hz -> 490,196
+	TCCR0B = (1<<CS01)|(1<<CS00)|(1<<WGM02);
+	OCR0A = 127;
+	
+	//ADC
+	ADMUX = (1<<ADLAR)|(1<<REFS0);
+	ADCSRA = (1<<ADEN)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);
+	
+}
+
+int ler_ADC(void){
+	unsigned char leituraH;
+	
+	ADCSRA |= (1<<ADSC);
+	
+	while ((ADCSRA & (1<<ADSC)) != 0);
+	
+	leituraH = ADCH;
+	
+	return (leituraH);
+}
+
