@@ -1,6 +1,8 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <avr/interrupt.h>
+#define  F_CPU 8000000UL
 
 void inic(void);
 int ler_ADC(void);
@@ -30,22 +32,25 @@ void inic(void){
 	
 	//TIMER1 -> Modo CTC 1s 
 	//f_OC1A = f_clk/(2*N*(1+0CR1A))
-	//N=256 / f_clk = 16MHz / f_OC1A = 1Hz
+	//N=256 / f_clk = 8MHz / f_OC1A = 1Hz
 	//OCR1A = 31249 
-	OCR1A = 31249;
+	OCR1A = 15624;
 	//Toggle
 	TCCR1A = (1<<COM1A0);
 	TCCR1B = (1<<CS12)|(1<<WGM12);
+	TIMSK1 = 0;
 
 	
 	//TIMER0 -> modo PWM
 	TCCR0A = (1<< COM0A1)|(1<<WGM01)|(1<<WGM00); //Configurar PWM prescaler 64 fpwm próximo de 500Hz -> 490,196
-	TCCR0B = (1<<CS01)|(1<<CS00)|(1<<WGM02);
-	OCR0A = 127;
+	TCCR0B = (1<<CS01)|(1<<CS00);
+	
 	
 	//ADC
 	ADMUX = (1<<ADLAR)|(1<<REFS0);
-	ADCSRA = (1<<ADEN)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);
+	ADCSRA = (1<<ADEN)|(1<<ADPS2)|(1<<ADPS1); //prescaler 64 -> 125kHz
+	
+	sei();
 	
 }
 
