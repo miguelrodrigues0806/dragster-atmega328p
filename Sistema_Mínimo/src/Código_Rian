@@ -1,1 +1,67 @@
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <stdio.h>
+#include <stdlib.h>
+#define F_CPU 8000000UL
 
+
+void inic(void);
+int ler_ADC(void);
+
+
+int main(void) {
+	inic();
+
+	while (1) {
+		// 2. Lê o ADC e atualiza o PWM de forma limpa e direta
+		OCR0A= ler_ADC();
+	}
+	
+	return 0;
+}
+
+void inic(void){
+	//PORTD -> Motor
+	DDRD |= (1<<PORTD0)|(1<<PORTD1)|(1<<PORTD2)|(1<<PORTD3)|(1<<PORTD4)|(1<<PORTD6);
+	PORTD &= ~((1<<PORTD0)|(1<<PORTD1)|(1<<PORTD2)|(1<<PORTD3));
+	
+	//PORTB -> Led
+	DDRB |= (1<<PORTB1);
+	PORTB &= ~(1<<PORTB1);
+	
+	//TIMER1 -> Modo CTC 1s
+	//f_OC1A = f_clk/(2*N*(1+OCR1A))
+	//N=256 / f_clk = 8MHz /
+	//OCR1A = 15624
+	OCR1A = 15624;
+	TCCR1B = (1<<CS12)|(1<<WGM12);
+	TIMSK1 |= (1<<OCIE1A);
+	
+	//TIMER0 -> modo PWM
+	TCCR0A = (1<< COM0A1)|(1<<WGM01)|(1<<WGM00); //Configurar PWM prescaler 64 fpwm próximo de 500Hz -> 490,196
+	TCCR0B = (1<<CS01)|(1<<CS00);
+	OCR0A = 127;
+	
+	//ADC
+	ADMUX = (1<<ADLAR)|(1<<REFS0); 
+	ADCSRA = (1<<ADEN)|(1<<ADPS2)|(1<<ADPS1); //Prescaler de 64 -> 125kHz
+	
+	sei();
+}
+
+ISR(TIMER1_COMPA_vect)
+{
+	PORTD ^= (1<<PORTD4);
+}
+
+int ler_ADC(void){
+	unsigned char leituraH;
+	
+	ADCSRA |= (1<<ADSC);
+	
+	while ((ADCSRA & (1<<ADSC)) != 0);
+	
+	leituraH = ADCH;
+	
+	return (leituraH);
+}
