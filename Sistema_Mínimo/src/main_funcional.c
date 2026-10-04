@@ -22,9 +22,8 @@ int main(void) {
 }
 
 void inic(void){
-	//PORTD -> Motor
-	DDRD |= (1<<PORTD0)|(1<<PORTD1)|(1<<PORTD2)|(1<<PORTD3)|(1<<PORTD6);
-	PORTD &= ~((1<<PORTD0)|(1<<PORTD1)|(1<<PORTD2)|(1<<PORTD3));
+	//PORTD -> PD6 saída PWM
+	DDRD |= (1<<PORTD6);
 	
 	//PORTB -> Led
 	DDRB |= (1<<PORTB1);
