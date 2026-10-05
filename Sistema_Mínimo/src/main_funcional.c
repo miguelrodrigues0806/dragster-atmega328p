@@ -30,18 +30,22 @@ void inic(void){
 	PORTB &= ~(1<<PORTB1);
 	
 	//TIMER1 -> Modo CTC 1s 
+	//COM1A1/COM1A0: Toggle OC1A on compare match
 	//f_OC1A = f_clk/(2*N*(1+0CR1A))
 	//N=256 / f_clk = 8MHz / f_OC1A = 1Hz
-	//OCR1A = 31249 
+	//WGM13/WGM12/WGM11/WGM10: CTC TOP=OCR1A
+	//CS12/CS11/CS10: prescaler 256
 	OCR1A = 15624;
-	//Toggle
 	TCCR1A = (1<<COM1A0);
 	TCCR1B = (1<<CS12)|(1<<WGM12);
 	TIMSK1 = 0;
 
 	
 	//TIMER0 -> modo PWM
-	TCCR0A = (1<< COM0A1)|(1<<WGM01)|(1<<WGM00); //Configurar PWM prescaler 64 fpwm próximo de 500Hz -> 490,196
+	//COM0A1/COM0A0: Clear OC0A on compare match, set OC0A at BOTTOM
+	//WGM02/WGM01/WGM00: TOP = 0xFF (255)
+	//CS02/CS01/CS00Configurar PWM prescaler 64 fpwm próximo de 500Hz -> 490,196
+	TCCR0A = (1<< COM0A1)|(1<<WGM01)|(1<<WGM00); 
 	TCCR0B = (1<<CS01)|(1<<CS00);
 	
 	
