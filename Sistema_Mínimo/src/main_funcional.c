@@ -1,8 +1,4 @@
 #include <avr/io.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <avr/interrupt.h>
-#define  F_CPU 8000000UL
 
 void inic(void);
 int ler_ADC(void);
@@ -14,9 +10,6 @@ int main(void) {
 	while (1) {
 		// 2. Lê o ADC e atualiza o PWM de forma limpa e direta
 		OCR0A= ler_ADC();
-		
-		
-
 	}
 	return 0;
 }
@@ -57,15 +50,12 @@ void inic(void){
 	
 }
 
-int ler_ADC(void){
-	unsigned char leituraH;
+unsigned char ler_ADC(void){
 	
 	ADCSRA |= (1<<ADSC);
 	
 	while ((ADCSRA & (1<<ADSC)) != 0);
 	
-	leituraH = ADCH;
-	
-	return (leituraH);
+	return ADCH;
 }
 
