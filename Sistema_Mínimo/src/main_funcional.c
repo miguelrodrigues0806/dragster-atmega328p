@@ -1,7 +1,7 @@
 #include <avr/io.h>
 
 void inic(void);
-int ler_ADC(void);
+unsigned char ler_ADC(void);
 
 
 int main(void) {
