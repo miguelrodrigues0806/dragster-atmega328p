@@ -1,6 +1,5 @@
 #include <avr/io.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <pinout.h>
 
 void inic(void);
 int ler_ADC(void);
