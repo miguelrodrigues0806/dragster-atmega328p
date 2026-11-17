@@ -7,12 +7,14 @@
 
 #include <avr/io.h>
 #include "pinout.h"
+#include "motores.h"
 
 void inic(void);
 
 int main(void)
 {
     inic();
+	motores_init();
     while (1) 
     {
     }
@@ -20,9 +22,9 @@ int main(void)
 
 void inic(void){
 	
-	//PORTB -> PB1 saída led 1Hz PB0,PB2,PB4,PB5 Motores
-	DDRB |= (1<<PORTB0)|(1<<PORTB1)|(1<<PORTB2)|(1<<PORTB4)|(1<<PORTB5);
-	PORTB &=~((1<<PORTB0)|(1<<PORTB1)|(1<<PORTB2)|(1<<PORTB4)|(1<<PORTB5));
+	//PORTB -> PB1 saída led 1Hz
+	DDRB |= (1<<PIN_LED_1HZ);
+	PORTB &=~(1<<PIN_LED_1HZ);
 	
 	//TIMER1 -> Modo CTC 1s
 	//COM1A1/COM1A0: Toggle OC1A on compare match
