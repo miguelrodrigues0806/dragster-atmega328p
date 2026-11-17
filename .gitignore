@@ -76,3 +76,16 @@ Testing/
 *.bck
 *.kicad_pcb-bak
 *.sch-bak
+
+# Microchip Studio / Atmel Studio & AVR-GCC
+Debug/
+Release/
+.vs/
+*.elf
+*.hex
+*.eep
+*.lss
+*.map
+*.srec
+*.usersignatures
+*.atsuo
