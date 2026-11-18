@@ -38,8 +38,8 @@
 #define ADC_BATTERY     PORTC5 // PC5 (A5)
 
 //Encoders
-#define ENC_LEFT		PORTC3 // PC3
-#define ENC_RIGHT		PORTC4 // PC4
+#define PIN_ENC_LEFT		PORTC3 // PC3
+#define PIN_ENC_RIGHT		PORTC4 // PC4
 
 
 #endif /* PINOUT_H_ */

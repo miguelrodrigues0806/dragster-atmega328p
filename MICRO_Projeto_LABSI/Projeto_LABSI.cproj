@@ -120,6 +120,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CNY70.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="CNY70.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
@@ -130,6 +136,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="pinout.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sonar.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sonar.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
