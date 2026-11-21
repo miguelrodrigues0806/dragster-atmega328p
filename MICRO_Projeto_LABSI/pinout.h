@@ -8,6 +8,17 @@
 
 #ifndef PINOUT_H_
 #define PINOUT_H_
+#include <avr/io.h>
+
+#if (F_CPU == 12000000UL)
+	#define LED_OFF 750
+	#define LED_ON 1500
+#elif (F_CPU == 8000000UL)
+	#define LED_OFF 500
+	#define LED_ON 1000
+#else
+	#error "F_CPU nao suportado para os calculos do TIMER2!"
+#endif
 
 // Comunicação (USART) (Módulos HC-12)
 #define PIN_RX          PORTD0 // PD0
