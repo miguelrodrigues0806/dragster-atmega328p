@@ -6,6 +6,8 @@
 
 void timer2_inic(void);
 uint8_t timer2_1s(void);
+uint8_t timer2_20ms(void);
+uint8_t timer2_100ms(void);
 
 
 

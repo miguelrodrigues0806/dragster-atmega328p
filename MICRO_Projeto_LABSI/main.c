@@ -1,40 +1,56 @@
-/*
- * Projeto_LABSI.c
- *
- * Created: 17/11/2026 17:05:19
- * Author : migue
- */ 
-
 #include <avr/io.h>
+#include <avr/interrupt.h>
+#include <stdint.h>
+#include <stdio.h>
 #include "pinout.h"
 #include "motores.h"
+#include "timer2.h"
+#include "sonar.h"
+#include "CNY70.h"
+#include "usart.h"
+#include "encoders.h"
 
-void inic(void);
+
+uint16_t RPM_left = 0;
+uint16_t RPM_right= 0;
 
 int main(void)
 {
-    inic();
-	motores_init();
+	char msg[32];
+	
+    timer2_inic();
+	usart_inic();
+	encoders_init();
+
+
+
+	sei();
+	
     while (1) 
     {
+		
+		if(timer2_1s()){
+	
+		}
+		
+		if(timer2_20ms()){
+			encoders_calcula_rpm();
+			
+			
+			
+		}
+		
+		if(timer2_100ms()){
+			snprintf(msg, sizeof(msg), "Right: %u | Left: %u\r\n", RPM_right, RPM_left);
+			usart_print(msg);
+			
+		}
+		
+		RPM_left = encoder_get_rpm_left();
+		RPM_right = encoder_get_rpm_right();
+
+		
+		
     }
 }
 
-void inic(void){
-	
-	//PORTB -> PB1 saída led 1Hz
-	DDRB |= (1<<PIN_LED_1HZ);
-	PORTB &=~(1<<PIN_LED_1HZ);
-	
-	//TIMER1 -> Modo CTC 1s
-	//COM1A1/COM1A0: Toggle OC1A on compare match
-	//f_OC1A = f_clk/(2*N*(1+0CR1A))
-	//N=256 / f_clk = 12MHz / f_OC1A = 1Hz
-	//WGM13/WGM12/WGM11/WGM10: CTC TOP=OCR1A
-	//CS12/CS11/CS10: prescaler 256
-	//OCR1A = 23437; //cristal externo
-	OCR1A = 15624; //cristal interno 8MHz 
-	TCCR1A = (1<<COM1A0);
-	TCCR1B = (1<<CS12)|(1<<WGM12);
-	
-}

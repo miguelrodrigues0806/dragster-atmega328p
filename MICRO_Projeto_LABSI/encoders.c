@@ -1,4 +1,3 @@
-
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/atomic.h>
@@ -6,7 +5,8 @@
 #include "encoders.h"
 #include "pinout.h"
 
-#define PULSOS_VOLTA   20 //Resolução dos Encoders -> 20 ranhuras por disco
+
+#define PULSOS_VOLTA   40 //Resolução dos Encoders -> 20 ranhuras por disco
 
 static uint8_t estado_anterior; //A variável static permite com que o valor dessa variável não se altere ao serem chamadas interrupções
 
@@ -84,6 +84,9 @@ void encoders_calcula_rpm(void)
 		//Re-start dos contadores
 		pulsos_left = 0;
 		pulsos_right = 0;
+		
+		
+		
 	}
 
 	// RPM = (pulsos * 60) / (PPR * T)

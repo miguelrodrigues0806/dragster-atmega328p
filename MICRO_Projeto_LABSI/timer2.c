@@ -3,8 +3,9 @@
 #include "pinout.h"
 #include "timer2.h"
 
-static volatile uint8_t contador_500ms = 0;
-static volatile uint8_t flag_1s = 0;
+static volatile uint8_t contador_500ms = 0, contador_10ms = 0, contador_20ms= 0, contador_100ms = 0;
+
+static volatile uint8_t flag_1s = 0, flag_10ms = 0, flag_20ms = 0, flag_100ms =0;
 
 void timer2_inic(void){
 	
@@ -37,17 +38,53 @@ uint8_t timer2_1s(void){
 	}
 }
 
+uint8_t timer2_20ms(void){
+	if(flag_20ms == 1){
+		flag_20ms = 0;
+		return 1;
+	}
+	return 0;
+}
+
+uint8_t timer2_100ms(void){
+	if(flag_100ms == 1){
+		flag_100ms = 0;
+		return 1;
+	}
+	return 0;
+}
+
 ISR(TIMER2_COMPA_vect){
 	static uint16_t contador_led = 0;
 	contador_led ++;
+	contador_10ms ++;
 	if(contador_led >= LED_OFF){
 		PORTB^=(1<<PIN_LED_1HZ);
 		contador_500ms ++;
+		
 		contador_led = 0;
 	}
+	
 	if(contador_500ms == 2){
 		flag_1s =1;
 		contador_500ms = 0;
+	}
+	
+	if(contador_10ms == 15){
+		flag_10ms = 1;
+		contador_10ms = 0;
+		contador_20ms ++;
+		contador_100ms ++;
+	}
+	
+	if(contador_20ms == 2){
+		flag_20ms = 1;
+		contador_20ms = 0;
+	}
+	
+	if(contador_100ms == 10){
+		flag_100ms = 1;
+		contador_100ms = 0;
 	}
 	
 }
