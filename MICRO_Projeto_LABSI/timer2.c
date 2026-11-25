@@ -9,22 +9,22 @@ static volatile uint8_t flag_1s = 0, flag_10ms = 0, flag_20ms = 0, flag_100ms =0
 
 void timer2_inic(void){
 	
-	//PORTB -> PB1 saída led 1Hz
+	//PORTB -> PB1 saï¿½da led 1Hz
 	DDRB |= (1<<PIN_LED_1HZ);
 	PORTB &=~(1<<PIN_LED_1HZ);
 	
 	//Cristal de 12MHz
 	//gerar uma base de tempo de T_ISR= 0,667ms
 	//f_ISR = 1500Hz
-	//1500 interrupções corresponde a 1s
-	//750 interrupções corresponde a 500ms perfeito para o led de 1Hz
+	//1500 interrupï¿½ï¿½es corresponde a 1s
+	//750 interrupï¿½ï¿½es corresponde a 500ms perfeito para o led de 1Hz
 	//500ms ligado e 500ms desligado
 	
-	TCCR2A =(1<<WGM21);
-	TCCR2B =(1<<CS22);
+	TCCR2A =(1<<WGM21); //Modo CTC
+	TCCR2B =(1<<CS22); //Prescaler de 64
 	TCNT2 = 0;
 	OCR2A = 124;
-	TIMSK2 = (1<<OCIE2A);
+	TIMSK2 = (1<<OCIE2A); //AutorizaÃ§Ã£o de geraÃ§Ã£o da interrupÃ§Ã£o do Timer 2
 }
 
 uint8_t timer2_1s(void){

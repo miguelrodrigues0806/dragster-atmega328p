@@ -3,7 +3,18 @@
 #include "motores.h"
 
 void motores_init(void) {
-	// Configurar pinos de direção do L298N como saída e a nível baixo (parados)
+	// Configurar pinos de direï¿½ï¿½o do L298N como saï¿½da e a nï¿½vel baixo (parados)
 	DDRB |= (1 << PIN_MOT_IN1) | (1 << PIN_MOT_IN2) | (1 << PIN_MOT_IN3) | (1 << PIN_MOT_IN4);
 	PORTB &= ~((1 << PIN_MOT_IN1) | (1 << PIN_MOT_IN2) | (1 << PIN_MOT_IN3) | (1 << PIN_MOT_IN4));
+	
+	//INIC. TIMER 0 -> PWM dos motores
+	//Configuraï¿½ï¿½o dos pinos do T/C0 como saï¿½da PD5(OC0B) e PD6(OC0A)
+	DDRD |= (1 << PIN_PWM_ENA) | (1 << PIN_PWM_ENB);
+	// Inicializaï¿½ï¿½o do PWM a zero
+	OCR0A = 0;
+	OCR0B = 0;
+	// Configurar Timer0 em Fast PWM
+	TCCR0A = (1 << COM0A1) | (1 << COM0B1) | (1 << WGM01)  | (1 << WGM00);
+	// Prescaler = 8
+	TCCR0B = (1 << CS01); //F_PWM = 5,86 kHz
 }
