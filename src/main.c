@@ -11,7 +11,7 @@ int main(void) {
 	while (1) {
 		// 2. Lê o ADC e atualiza o PWM de forma limpa e direta
 		OCR0A= ler_ADC();
-		
+			
 		
 
 	}
