@@ -13,6 +13,7 @@
 
 uint16_t RPM_left = 0;
 uint16_t RPM_right= 0;
+uint16_t sonar_distance = 0;
 
 int main(void)
 {
@@ -21,6 +22,7 @@ int main(void)
     timer2_inic();
 	usart_inic();
 	encoders_init();
+	sonar_init();
 
 
 
@@ -41,7 +43,11 @@ int main(void)
 		}
 		
 		if(timer2_100ms()){
-			snprintf(msg, sizeof(msg), "Right: %u | Left: %u\r\n", RPM_right, RPM_left);
+			sonar_trigger();
+			
+			sonar_distance = sonar_distance_cm();
+			//snprintf(msg, sizeof(msg), "SONAR: %u | Right: %u | Left: %u\r\n", sonar_distance, RPM_right, RPM_left);
+			snprintf(msg,sizeof(msg),"SONAR Distance: %u\r\n",sonar_distance);
 			usart_print(msg);
 			
 		}

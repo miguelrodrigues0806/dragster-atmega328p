@@ -13,7 +13,9 @@
 
 void sonar_init(void);
 void sonar_trigger(void);
-uint16_t sonar_get_distance_cm(void);
+void timer1_sonar_inic(void);
+uint16_t sonar_ticks(void);
+uint16_t sonar_distance_cm(void);
 
 
 
